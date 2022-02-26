@@ -53,6 +53,8 @@ const TablePagination = (props) => {
     const { insideCard } = props
     const total = pagination?.total
     const page = pagination?.page
+    const from = pagination?.from
+    const to = pagination?.to
     const totalPages = pagination?.total_pages
     const nextPage = (page + 1) > totalPages ? totalPages : (page + 1)
     const prevPage = (page - 1) < 1 ? 1 : (page - 1)
@@ -70,7 +72,11 @@ const TablePagination = (props) => {
         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              <span className="font-medium">{total}&nbsp;</span>
+              <span className="font-medium">
+                viewing {from}-{to}&nbsp;
+              </span>
+              of
+              <span className="font-medium">&nbsp;{total}&nbsp;</span>
               results
             </p>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types'
 import Button, { SecondaryButton } from '../Button'
 import Modal, { ModalBody, ModalFooter } from '../Modal'
@@ -7,9 +7,19 @@ import { createSubscriber } from "../../services/subscriber";
 
 const AddSubscriberModal = (props) => {
   const { isOpen, onClose, onSuccess } = props
+
+  useEffect(() => {
+    if (!isOpen) {
+      setEmail("")
+      setName("")
+    }
+  })
+
   const [isSaving, setIsSaving] = useState(false)
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+
+  const [emailErrors, setEmailErrors] = useState([])
 
   const handleChange = (e) => {
     const { target: { name, value }} = e
@@ -20,6 +30,8 @@ const AddSubscriberModal = (props) => {
       setName(value)
     }
   }
+
+
   const onSubmit = () => {
     const payload = {
       email,
@@ -28,12 +40,14 @@ const AddSubscriberModal = (props) => {
 
     setIsSaving(true)
     createSubscriber(payload)
-    .then(() => {
-      onSuccess()
+    .then((response) => {
+      onSuccess(response?.data?.subscriber)
     })
     .catch((payload) => {
       const error = payload?.response?.data?.message || 'Something went wrong'
-      console.error(error)
+      if (payload?.response?.data?.errors?.email) {
+        setEmailErrors(payload?.response?.data?.errors?.email)
+      }
     })
     .finally(() => {
       setIsSaving(false)
@@ -46,11 +60,19 @@ const AddSubscriberModal = (props) => {
         <ModalBody>
           <form className="my-4 text-blueGray-500 text-lg leading-relaxed">
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                Email*
-              </label>
+              <div className="flex">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                  Email
+                  <span className="text-red-500 ml-0.5">
+                    *
+                  </span>
+                </label>
+                <span className="text-sm text-red-500 ml-2">
+                  {emailErrors.join(" ")}
+                </span>
+              </div>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
                 name="email"
                 type="email"
                 placeholder="rickc137@citadel.com"

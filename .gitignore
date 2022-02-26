@@ -32,3 +32,4 @@
 
 # Ignore Node Modules
 /node_modules
+/config/credentials/development.key

@@ -26,7 +26,7 @@ export const updateSubscriber = (subscriberId, payload = {}) => {
     'Content-Type': 'application/json'
   }
 
-  return axios.patch(`/api/subscribers/${subscriberId}`, payload, {
+  return axios.patch(`/api/subscribers/${subscriberId}/subscription`, payload, {
     headers: headers
   })
 }

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import StatusPill from '../StatusPill'
+import SubscriberRow from "../SubscriberRow"
 
 const SubscriberTable = (props) => {
-  const { subscribers, onChangeStatusSelected } = props
+  const { subscribers, openSubscriberStatus } = props
 
   return (
     <div className="flex flex-col">
@@ -37,22 +37,10 @@ const SubscriberTable = (props) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {subscribers.map((subscriber) => (
-                  <tr key={subscriber.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{subscriber.name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{subscriber.email}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <StatusPill value={subscriber.status} />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button className="text-primary-gold-600 hover:text-primary-gold-900 underline" onClick={() => onChangeStatusSelected(subscriber.id, subscriber.status)}>
-                        {subscriber.status === 'active' ? 'Unsubscribe' : 'Subscribe'}
-                      </button>
-                    </td>
-                  </tr>
+                  <SubscriberRow subscriber={subscriber} openSubscriberStatus={openSubscriberStatus}
+                     key={subscriber?.id}>
+
+                  </SubscriberRow>
                 ))}
               </tbody>
             </table>
@@ -72,12 +60,12 @@ SubscriberTable.propTypes = {
       status: PropTypes.string
     })
   ),
-  onChangeStatusSelected: PropTypes.func
+  openSubscriberStatus: PropTypes.func,
 }
 
 SubscriberTable.defaultProps = {
   subscribers: [],
-  onChangeStatusSelected: () => {}
+  openSubscriberStatus: () => {},
 }
 
 export default SubscriberTable

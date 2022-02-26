@@ -9,17 +9,20 @@ import Button, { SecondaryButton } from '../Button';
 import { updateSubscriber } from "../../services/subscriber";
 
 const SubscriberStatusModal = (props) => {
-  const { isOpen, onSuccess, onClose, subscriberId, status } = props;
+  const { isOpen, onSuccess, onClose, subscriber } = props;
   const [isDeleting, setIsDeleting] = useState(false)
+  const status = subscriber?.status
 
   const onUpdate = () => {
+    const newStatus = status === 'active' ? 'inactive' : 'active'
     const payload = {
-      status: status === 'active' ? 'inactive' : 'active'
+      status: newStatus
     }
 
     setIsDeleting(true)
-    updateSubscriber(subscriberId, payload)
+    updateSubscriber(subscriber.id, payload)
     .then(() => {
+      subscriber.status = newStatus
       onSuccess()
     })
     .catch((payload) => {
@@ -69,8 +72,11 @@ SubscriberStatusModal.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   onSuccess: PropTypes.func,
-  subscriberId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  status: PropTypes.string
+  subscriber: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+}
+
+SubscriberStatusModal.defaultProps = {
+  subscriber: {}
 }
 
 export default SubscriberStatusModal;

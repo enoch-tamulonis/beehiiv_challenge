@@ -7,7 +7,6 @@ import SubscriberStatusModal from './components/SubscriberStatusModal'
 import SubscriberTable from './components/SubscriberTable'
 import TablePagination from './components/TablePagination'
 import LoadingSpinner from './components/LoadingSpinner'
-
 // Services
 import { getSubscribers } from './services/subscriber'
 
@@ -21,11 +20,10 @@ function App() {
   );
   const [perPage] = useQueryParam(
     'perPage',
-    withDefault(NumberParam, 25)
+    withDefault(NumberParam, 5)
   );
   const [showAddModal, setShowAddModal] = useState(false)
-  const [focusedSubscriberId, setFocusedSubscriberId] = useState('')
-  const [focusedSubscriberStatus, setFocusedSubscriberStatus] = useState('')
+  const [focusedSubscriber, setFocusedSubscriber] = useState('')
   const [subscribers, setSubscribers] = useState([])
   const [pagination, setPagination] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -70,23 +68,26 @@ function App() {
     setShowAddModal(false)
   }
 
-  const onSuccessAddSubscriber = () => {
+  const onSuccessAddSubscriber = (subscriber) => {
     setShowAddModal(false)
+    setPagination({...pagination, total: pagination.total + 1})
+    if (page == 1) {
+      setSubscribers(subscribers.splice(1))
+      setSubscribers(subscribers => [subscriber, ...subscribers])
+    }
+
   }
 
-  const onUpdateStatusSelectected = (subscriberId, status) => {
-    setFocusedSubscriberId(subscriberId)
-    setFocusedSubscriberStatus(status)
+  const onOpenSubscriberStatus = (subscriber) => {
+    setFocusedSubscriber(subscriber)
   }
 
   const onCloseUpdateStatusSubscriberModal = () => {
-    setFocusedSubscriberId('')
-    setFocusedSubscriberStatus('')
+    setFocusedSubscriber('')
   }
 
   const onSuccessUpdateStatusSubscriber = () => {
-    setFocusedSubscriberId('')
-    setFocusedSubscriberStatus('')
+    setFocusedSubscriber('')
   }
 
   return (
@@ -98,15 +99,14 @@ function App() {
           onSuccess={onSuccessAddSubscriber}
         />
         <SubscriberStatusModal
-          isOpen={focusedSubscriberId !== '' && focusedSubscriberStatus !== ''}
+          isOpen={focusedSubscriber !== ''}
           onClose={onCloseUpdateStatusSubscriberModal}
           onSuccess={onSuccessUpdateStatusSubscriber}
-          subscriberId={focusedSubscriberId}
-          status={focusedSubscriberStatus}
+          subscriber={focusedSubscriber}
         />
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-semibold flex items-center">
-            {pagination?.total} Subscribers {isLoading && <LoadingSpinner className="ml-4" />}
+            {pagination?.total} Total Subscribers {isLoading && <LoadingSpinner className="ml-4" />}
           </h1>
           <SecondaryButton onClick={onOpenAddSubscriber}>
             Add Subscriber
@@ -115,7 +115,7 @@ function App() {
         <div className="mt-6">
           <SubscriberTable
             subscribers={subscribers}
-            onChangeStatusSelected={onUpdateStatusSelectected}
+            openSubscriberStatus={onOpenSubscriberStatus}
           />
           <TablePagination pagination={pagination} onPageSelected={onPageSelected} />
         </div>

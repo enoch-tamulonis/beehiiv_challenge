@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 module PaginationMethods
+  attr_reader :total_records
   def pagination(total_records)
+    @total_records = total_records
     {
       page: page,
       per_page: limit,
       total: total_records,
-      total_pages: total_records.nil? ? 0 : (total_records / limit.to_f).ceil
+      total_pages: total_records.nil? ? 0 : (total_records / limit.to_f).ceil,
+      from: from,
+      to: to
     }
   end
 
@@ -24,5 +28,14 @@ module PaginationMethods
 
   def offset
     page === 1 ? 0 : ((page - 1) * limit)
+  end
+
+  def from
+    offset + 1
+  end
+
+  def to
+    estimated_to = limit * page
+    estimated_to > total_records ? total_records : estimated_to
   end
 end
