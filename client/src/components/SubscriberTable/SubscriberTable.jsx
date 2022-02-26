@@ -3,7 +3,6 @@ import SubscriberRow from "../SubscriberRow"
 
 const SubscriberTable = (props) => {
   const { subscribers, openSubscriberStatus } = props
-
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

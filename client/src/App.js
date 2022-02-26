@@ -27,6 +27,7 @@ function App() {
   const [subscribers, setSubscribers] = useState([])
   const [pagination, setPagination] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const paginatedSubscribers = subscribers.filter((subscriber, i) => i <= 4)
 
   const refreshSubscribers = useCallback(() => {
     const params = {
@@ -72,10 +73,8 @@ function App() {
     setShowAddModal(false)
     setPagination({...pagination, total: pagination.total + 1})
     if (page == 1) {
-      setSubscribers(subscribers.splice(1))
       setSubscribers(subscribers => [subscriber, ...subscribers])
     }
-
   }
 
   const onOpenSubscriberStatus = (subscriber) => {
@@ -114,7 +113,7 @@ function App() {
         </div>
         <div className="mt-6">
           <SubscriberTable
-            subscribers={subscribers}
+            subscribers={paginatedSubscribers}
             openSubscriberStatus={onOpenSubscriberStatus}
           />
           <TablePagination pagination={pagination} onPageSelected={onPageSelected} />

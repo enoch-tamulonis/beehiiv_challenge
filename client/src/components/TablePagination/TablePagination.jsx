@@ -58,6 +58,7 @@ const TablePagination = (props) => {
     const totalPages = pagination?.total_pages
     const nextPage = (page + 1) > totalPages ? totalPages : (page + 1)
     const prevPage = (page - 1) < 1 ? 1 : (page - 1)
+    const onLastPage = page == totalPages
 
     return (
       <div className={cx("py-3 flex items-center justify-between", insideCard ? "bg-white border-t border-gray-200" : "")}>
@@ -73,7 +74,7 @@ const TablePagination = (props) => {
           <div>
             <p className="text-sm text-gray-700">
               <span className="font-medium">
-                viewing {from}-{to}&nbsp;
+                viewing {from}-{onLastPage ? total : to}&nbsp;
               </span>
               of
               <span className="font-medium">&nbsp;{total}&nbsp;</span>
