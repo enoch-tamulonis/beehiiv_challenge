@@ -1,10 +1,13 @@
 # Beehiiv - Challenge
 
-### View the finished challenge
-  You can view the live completed challenge [here](https://beehiivchallenge.herokuapp.com/)
+## View the completed challenge
+  You can view the completed challenge live [here](https://beehiivchallenge.herokuapp.com/)
+  
   username is `username`
+  
   password is `password`
-## What is Challenge?
+
+### What is Challenge?
 
 Challenge is a rails/react app meant to be used with our code challenge assignment. Use this as the starting point for your code challenge.
 
